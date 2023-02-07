@@ -5,6 +5,8 @@ export const theme = {
       'secondary-color': '#50381F',
       danger: '#EA5235',
       white: '#FFF8EA',
+      green: '#6D8B74',
+      //6D8B74 - 86C8BC
    },
    fontSizes: {
       small: '0.875rem',

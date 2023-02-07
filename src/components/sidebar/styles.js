@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 export const SidebarComponent = styled.div`
    background-color: ${(props) => props.theme.color['ligth']};
-   width: 18rem;
+   width: 19rem;
    height: 100vh;
    position: relative;
 

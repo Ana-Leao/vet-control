@@ -2,74 +2,41 @@ import Modal from 'react-modal';
 import { PawPrint, Pencil, TrashSimple, X } from 'phosphor-react';
 import { useState } from 'react';
 import {
-   Avatar,
-   ButtonCloseModal,
-   ButtonSave,
-   ButtonXClose,
    ContainerView,
    DeleteButton,
    EditButton,
    EmptyTable,
-   FooterModal,
-   FormEditPatient,
-   InputContainer,
-   ModalHeader,
-   ModalTitle,
    PatientsTable,
 } from './styles';
-import catAvatar from '../../assets/images/avatar/cat-avatar.png';
-import dogAvatar from '../../assets/images/avatar/dog-avatar.png';
+
+import axios from 'axios';
+import { useEffect } from 'react';
+import { ModalEditPatient } from '../../components/modalEditPatient';
 
 export function Patients() {
+   const [patients, setPatients] = useState([]);
    const [isModalOpen, setIsModalOpen] = useState(false);
 
-   function onRequestClose() {
-      setIsModalOpen(false);
+   function getAllPatients() {
+      axios
+         .get('http://localhost:8000/api/all-patients')
+         .then((response) => {
+            setPatients(response.data);
+         })
+         .catch((error) => {
+            console.log(error);
+         });
    }
 
-   const patients = [
-      {
-         id: 1,
-         name: 'Demo',
-         specie: 'Felino',
-         age: 5,
-         weight: 5.9,
-         breed: 'S.R.D',
-         tutor: 'Ana Paula Queiroz Leão',
-      },
-      {
-         id: 2,
-         name: 'Demo',
-         specie: 'Felino',
-         age: 5,
-         weight: 5.9,
-         breed: 'S.R.D',
-         tutor: 'Ana Paula',
-      },
-      {
-         id: 3,
-         name: 'Demo',
-         specie: 'Felino',
-         age: 5,
-         weight: 5.9,
-         breed: 'S.R.D',
-         tutor: 'Ana Paula',
-      },
-      {
-         id: 4,
-         name: 'Demo',
-         specie: 'Felino',
-         age: 5,
-         weight: 5.9,
-         breed: 'S.R.D',
-         tutor: 'Ana Paula',
-      },
-   ];
+   useEffect(() => {
+      getAllPatients();
+   }, []);
 
+   console.log(patients);
    return (
       <>
          <ContainerView>
-            {patients.length ? (
+            {patients?.length ? (
                <PatientsTable>
                   <thead>
                      <tr>
@@ -138,65 +105,10 @@ export function Patients() {
                </>
             )}
 
-            <Modal
-               //className='teste'
-               isOpen={isModalOpen}
-               //onAfterOpen={afterOpenModal}
-               onRequestClose={onRequestClose}
-               //contentLabel='Example Modal'
-               ariaHideApp={false}
-               shouldCloseOnOverlayClick={true}
-               className='modal-content'
-               overlayClassName='modal-overlay'
-            >
-               <ModalHeader>
-                  <ModalTitle>Atualizar Informações</ModalTitle>
-                  <ButtonXClose onClick={() => setIsModalOpen(false)}>
-                     <X size={22} weight='bold' />
-                  </ButtonXClose>
-               </ModalHeader>
-
-               <Avatar>
-                  <img src={catAvatar} alt='' />
-               </Avatar>
-
-               <FormEditPatient>
-                  <InputContainer>
-                     <label htmlFor='animalName'>Nome:</label>
-                     <input type='text' name='animalName' id='animalName' />
-                  </InputContainer>
-
-                  <InputContainer>
-                     <label htmlFor='animalAge'>Idade:</label>
-                     <input type='text' name='animalAge' id='animalAge' />
-                  </InputContainer>
-
-                  <InputContainer>
-                     <label htmlFor='breed'>Raça:</label>
-                     <input type='text' name='breed' id='breed' />
-                  </InputContainer>
-
-                  <InputContainer>
-                     <label htmlFor='weight'>Peso:</label>
-                     <input type='text' name='weight' id='weight' />
-                  </InputContainer>
-
-                  <InputContainer>
-                     <label htmlFor='specie'>Espécie:</label>
-                     <select name='specie' id='specie'>
-                        <option value='feline'>Felino</option>
-                        <option value='canine'>Canino</option>
-                     </select>
-                  </InputContainer>
-
-                  <FooterModal>
-                     <ButtonCloseModal type='button' onClick={onRequestClose}>
-                        Cancelar
-                     </ButtonCloseModal>
-                     <ButtonSave type='submit'>Salvar</ButtonSave>
-                  </FooterModal>
-               </FormEditPatient>
-            </Modal>
+            <ModalEditPatient
+               isModalOpen={isModalOpen}
+               setIsModalOpen={setIsModalOpen}
+            />
          </ContainerView>
       </>
    );
